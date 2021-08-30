@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.dmitrys.web.model.User;
 import ru.dmitrys.web.service.UserService;
+import java.security.Principal;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -19,31 +19,8 @@ public class UserController {
     }
 
     @GetMapping()
-    public String getUsers(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
-        return "users";
-    }
-
-    @PostMapping()
-    public String saveUser(@ModelAttribute("user") User user) {
-        userService.saveUser(user);
-        return "redirect:/";
-    }
-
-    @PatchMapping()
-    public String updateUser(@ModelAttribute("user") User user) {
-        userService.updateUser(user);
-        return "redirect:/";
-    }
-
-    @DeleteMapping()
-    public String deleteUser(@RequestParam("id") long id) {
-        userService.deleteUser(id);
-        return "redirect:/";
-    }
-
-    @ModelAttribute
-    public void addAttribute(Model model) {
-        model.addAttribute("user", new User());
+    public String user(Principal principal, Model model) {
+        model.addAttribute("user", userService.getUser(principal.getName()));
+        return "user";
     }
 }

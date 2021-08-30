@@ -29,7 +29,7 @@ import java.util.Properties;
 @EnableWebMvc
 @PropertySource("classpath:hibernate-cfg.properties")
 @EnableTransactionManagement
-public class JavaConfig implements WebMvcConfigurer {
+public class WebConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
 
@@ -37,11 +37,13 @@ public class JavaConfig implements WebMvcConfigurer {
 
 
     @Autowired
-    public JavaConfig(ApplicationContext applicationContext, Environment env) {
+    public WebConfig(ApplicationContext applicationContext, Environment env) {
         this.applicationContext = applicationContext;
         this.env = env;
     }
 
+
+//hibernate lower
     @Bean
     public DataSource getDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();

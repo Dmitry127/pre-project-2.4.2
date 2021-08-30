@@ -2,9 +2,11 @@ package ru.dmitrys.web.dao;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.dmitrys.web.model.Role;
 import ru.dmitrys.web.model.User;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
@@ -27,6 +29,27 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
+    public User getUser(String login) {
+        return entityManager.createQuery("select u from  User u where u.login = :login", User.class)
+                .setParameter("login", login).getSingleResult();
+    }
+
+    @Override
+    @Transactional
+    public Role getRole(String role) {
+        try {
+            return entityManager.createQuery("select r from Role r where r.role = :role", Role.class)
+                    .setParameter("role", "ROLE_" + role).getSingleResult();
+        } catch (NoResultException e) {
+            Role newRole = new Role();
+            newRole.setRole("ROLE_" + role);
+            entityManager.persist(newRole);
+            return entityManager.createQuery("select r from Role r where r.role = :role", Role.class)
+                    .setParameter("role", "ROLE_" + role).getSingleResult();
+        }
+    }
+
+    @Override
     public List<User> getAllUsers() {
         return entityManager.createQuery("select u from User u", User.class).getResultList();
     }
@@ -41,5 +64,11 @@ public class UserDAOImpl implements UserDAO {
     @Transactional
     public void deleteUser(long id) {
         entityManager.remove(entityManager.find(User.class, id));
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(String login) {
+        entityManager.remove(getUser(login));
     }
 }

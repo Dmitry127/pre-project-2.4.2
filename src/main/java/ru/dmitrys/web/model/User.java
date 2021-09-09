@@ -26,7 +26,7 @@ public class User implements UserDetails {
     @Column
     private String password;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private Set<Role> roles;
 
 
@@ -58,6 +58,15 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRolesString() {
+        StringBuilder roleString = new StringBuilder();
+        for (Role r:
+             roles) {
+            roleString.append(r.toString()).append(" ");
+        }
+        return roleString.toString();
     }
 
     public Set<Role> getRoles() {

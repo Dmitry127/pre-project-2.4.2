@@ -6,9 +6,6 @@
 </head>
 <body>
 
-<form action="/logout" method="GET">
-    <button>logout</button>
-</form>
 
 <table style="border:1px solid black;" align="right">
     <tr>
@@ -21,13 +18,13 @@
         <th>Roles</th>
     </tr>
     <tr th:each="user : ${users}">
-        <td th:text="${user.id}">id</td>
-        <td th:text="${user.login}">login</td>
-        <td th:text="${user.password}">password</td>
-        <td th:text="${user.name}">name</td>
-        <td th:text="${user.lastName}">last name</td>
-        <td th:text="${user.email}">email</td>
-        <td th:text="${user.roles}">roles</td>
+        <td th:text="*{user.id}">id</td>
+        <td th:text="*{user.login}">login</td>
+        <td th:text="*{user.password}">password</td>
+        <td th:text="*{user.name}">name</td>
+        <td th:text="*{user.lastName}">last name</td>
+        <td th:text="*{user.email}">email</td>
+        <td th:text="*{user.getRolesString()}">roles</td>
     </tr>
 </table>
 
@@ -72,21 +69,28 @@
 
 <h2>Update user</h2>
 <form th:method="GET" th:action="@{/admin/update}">
-    <label for="login">Login</label>
-    <input type="text" name="login" id="login"/>
+    <label for="login0">Login</label>
+    <input type="text" name="login" id="login0"/>
 
     <input type="submit" value="Update user"/>
 </form>
 
     <h2>Delete User</h2>
     <form th:method="DELETE" th:action="@{/admin}">
-        <label for="login">Login</label>
-        <input type="text" th:name="login"/>
+        <label for="login1">Login</label>
+        <input type="text" th:name="login" id="login1"/>
 
         <br>
 
         <input type="submit" value="Delete User"/>
     </form>
+
+<br>
+<br>
+
+<form action="/logout" method="GET">
+    <button>logout</button>
+</form>
 
 </body>
 </html>

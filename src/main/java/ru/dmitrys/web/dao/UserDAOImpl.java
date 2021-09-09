@@ -29,8 +29,9 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
+    @Transactional
     public User getUser(String login) {
-        return entityManager.createQuery("select u from  User u where u.login = :login", User.class)
+        return entityManager.createQuery("select u from  User u join fetch u.roles where u.login = :login", User.class)
                 .setParameter("login", login).getSingleResult();
     }
 
@@ -51,7 +52,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getAllUsers() {
-        return entityManager.createQuery("select u from User u", User.class).getResultList();
+        return entityManager.createQuery("select distinct u from User u join fetch u.roles", User.class).getResultList();
     }
 
     @Override

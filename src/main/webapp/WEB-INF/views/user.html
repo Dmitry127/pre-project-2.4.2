@@ -21,7 +21,7 @@
         <th>E-mail</th>
         <th>Roles</th>
     </tr>
-    <tr th:each="user : ${user}">
+    <tr th:object="${user}">
         <td th:text="${user.id}">id</td>
         <td th:text="${user.login}">login</td>
         <td th:text="${user.password}">password</td>

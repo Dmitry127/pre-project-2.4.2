@@ -1,7 +1,6 @@
 package ru.dmitrys.web.dao;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.dmitrys.web.model.Role;
 import ru.dmitrys.web.model.User;
 
@@ -18,7 +17,6 @@ public class UserDAOImpl implements UserDAO {
 
 
     @Override
-    @Transactional
     public void saveUser(User user) {
         entityManager.persist(user);
     }
@@ -29,14 +27,12 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    @Transactional
     public User getUser(String login) {
         return entityManager.createQuery("select u from  User u join fetch u.roles where u.login = :login", User.class)
                 .setParameter("login", login).getSingleResult();
     }
 
     @Override
-    @Transactional
     public Role getRole(String role) {
         try {
             return entityManager.createQuery("select r from Role r where r.role = :role", Role.class)
@@ -56,19 +52,16 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    @Transactional
     public void updateUser(User user) {
         entityManager.merge(user);
     }
 
     @Override
-    @Transactional
     public void deleteUser(long id) {
         entityManager.remove(entityManager.find(User.class, id));
     }
 
     @Override
-    @Transactional
     public void deleteUser(String login) {
         entityManager.remove(getUser(login));
     }

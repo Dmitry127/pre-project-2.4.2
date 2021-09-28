@@ -1,15 +1,11 @@
 package ru.dmitrys.web.model;
 
-
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
-
 
 @Entity
 @Table(name = "users")
@@ -26,9 +22,8 @@ public class User implements UserDetails {
     @Column
     private String password;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles;
-
 
     @Column(name = "name")
     private String name;
@@ -39,8 +34,8 @@ public class User implements UserDetails {
     @Column(name = "email")
     private String email;
 
-    public User() {}
-
+    public User() {
+    }
 
     public User(String name, String lastName, String email) {
         this.name = name;
@@ -62,8 +57,8 @@ public class User implements UserDetails {
 
     public String getRolesString() {
         StringBuilder roleString = new StringBuilder();
-        for (Role r:
-             roles) {
+        for (Role r :
+                roles) {
             roleString.append(r.toString()).append(" ");
         }
         return roleString.toString();

@@ -30,9 +30,7 @@ import java.util.Properties;
 public class WebConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
-
     private final Environment env;
-
 
     @Autowired
     public WebConfig(ApplicationContext applicationContext, Environment env) {
@@ -40,8 +38,7 @@ public class WebConfig implements WebMvcConfigurer {
         this.env = env;
     }
 
-
-//hibernate lower
+    //hibernate lower
     @Bean
     public DataSource getDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -86,7 +83,7 @@ public class WebConfig implements WebMvcConfigurer {
         return new PersistenceExceptionTranslationPostProcessor();
     }
 
-//thymeleaf lower
+    //thymeleaf lower
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();

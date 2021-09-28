@@ -1,4 +1,4 @@
-package ru.dmitrys.web.secutiry;
+package ru.dmitrys.web.config.secutiry.handler;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;

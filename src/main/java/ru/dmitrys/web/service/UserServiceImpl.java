@@ -4,29 +4,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.dmitrys.web.dao.UserDAO;
-import ru.dmitrys.web.model.Role;
 import ru.dmitrys.web.model.User;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
-@Transactional
-public class UserServiceImpl implements  UserService, UserDetailsService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserDAO userDAO;
+    private final RoleService roleService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDAO userDAO) {
+    public UserServiceImpl(UserDAO userDAO, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userDAO = userDAO;
+        this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public void saveUser(User user) {
+    @Transactional
+    public void saveUser(User user, String adminRole) {
+        user.setRoles(roleService.getRoleSet(adminRole));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDAO.saveUser(user);
     }
 
@@ -41,18 +45,23 @@ public class UserServiceImpl implements  UserService, UserDetailsService {
     }
 
     @Override
-    public Role getRole(String role) {
-        return userDAO.getRole(role);
-    }
-
-    @Override
     public List<User> getAllUsers() {
         return userDAO.getAllUsers();
     }
 
     @Override
-    public void updateUser(User user) {
-        userDAO.updateUser(user);
+    @Transactional
+    public void updateUser(User user, String adminRole) {
+        User persistentUser = getUser(user.getLogin());
+        persistentUser.setName(user.getName());
+        persistentUser.setLastName(user.getLastName());
+        persistentUser.setEmail(user.getEmail());
+        persistentUser.setRoles(roleService.getRoleSet(adminRole));
+
+        if (!persistentUser.getPassword().equals(user.getPassword())) {
+            persistentUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        userDAO.updateUser(persistentUser);
     }
 
     @Override
@@ -63,16 +72,6 @@ public class UserServiceImpl implements  UserService, UserDetailsService {
     @Override
     public void deleteUser(String login) {
         userDAO.deleteUser(login);
-    }
-
-    @Override
-    public Set<Role> getRoleSet(String role) {
-        Set<Role> roleSet = new HashSet<>();
-        roleSet.add(getRole("USER"));
-        if (role.equals("ADMIN")) {
-            roleSet.add(getRole("ADMIN"));
-        }
-        return roleSet;
     }
 
     @Override

@@ -10,7 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.dmitrys.web.config.secutiry.handler.LoginSuccessHandler;
 import ru.dmitrys.web.service.UserServiceImpl;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -29,12 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("admin")
-                //пароль здесь - admin
-                .password("$2a$12$AuC2If5Gvs6rX1RY7GzzTuO3mEleZINyLTS8lH4705h0ffhWnn46O")
-                .roles("ADMIN");
-
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
 
     }
